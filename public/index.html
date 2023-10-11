@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+</head>
+
+<body>
+    <h1>OTP Verification</h1>
+    <form id="otpForm">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
+
+        <label for="otp">Enter OTP:</label>
+        <input type="text" id="otp" name="otp" required><br><br>
+
+        <button type="submit">Verify OTP</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('otpForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const otp = document.getElementById('otp').value;
+
+            try {
+                const response = await fetch('/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber, otp })
+                });
+
+                const data = await response.json();
+                const resultDiv = document.getElementById('result');
+                if (data.success) {
+                    resultDiv.textContent = data.message;
+                } else {
+                    resultDiv.textContent = 'Error: ' + data.message;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+
+</html>
